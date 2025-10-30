@@ -1,0 +1,18 @@
+<Project Sdk="WixToolset.Sdk/6.0.2">
+  <PropertyGroup>
+    <OutputName>ContextSensor-$(Platform)</OutputName>
+    <OutputType>Package</OutputType>
+    <Platforms>x86;x64</Platforms>
+    <DefineConstants>SolutionDir=$(MSBuildProjectDirectory)\..\</DefineConstants>
+    <EnableDefaultItems>false</EnableDefaultItems>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="WixToolset.Util.wixext" Version="6.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Product.wxs" />
+    <Compile Include="Components.wxs" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
+
+  <!-- Minimal, single-entry Package to resolve WIX0089 -->
+  <Package Name="ContextSensor"
+           Manufacturer="ContextSensor Team"
+           Version="1.0.1"
+           UpgradeCode="A1B2C3D4-E5F6-4A5B-8C7D-9E0F1A2B3C4D">
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <!-- Minimal directory tree to support ApplicationFiles -->
+    <?if $(var.Platform) = x64 ?>
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="ContextSensor" />
+    </StandardDirectory>
+    <?else?>
+    <StandardDirectory Id="ProgramFilesFolder">
+      <Directory Id="INSTALLFOLDER" Name="ContextSensor" />
+    </StandardDirectory>
+    <?endif?>
+
+    <!-- CommonAppData directory tree for data/logs/temp/updates -->
+    <StandardDirectory Id="CommonAppDataFolder">
+      <Directory Id="APPDATAFOLDER" Name="ContextSensor">
+        <Directory Id="DATAFOLDER" Name="data" />
+        <Directory Id="LOGSFOLDER" Name="logs" />
+        <Directory Id="TEMPFOLDER" Name="temp">
+          <Directory Id="UPDATESFOLDER" Name="updates" />
+        </Directory>
+      </Directory>
+    </StandardDirectory>
+
+    <!-- Start Menu folder -->
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="ContextSensor" />
+    </StandardDirectory>
+
+    <!-- Re-enable all component groups now that directories are defined -->
+    <Feature Id="MainFeature" Title="ContextSensor" Level="1" ConfigurableDirectory="INSTALLFOLDER">
+      <ComponentGroupRef Id="RegistryAndShortcuts" />
+      <ComponentGroupRef Id="ApplicationFiles" />
+      <ComponentGroupRef Id="MonitorServiceFiles" />
+      <ComponentGroupRef Id="UpdaterServiceFiles" />
+      <ComponentGroupRef Id="DataFolders" />
+    </Feature>
+
+  </Package>
+</Wix>

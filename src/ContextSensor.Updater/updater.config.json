@@ -1,0 +1,16 @@
+{
+  "Update": {
+    "UpdateCheckUrl": "https://updates.example.com/contextsensor/manifest.json",
+    "CheckIntervalHours": 4,
+    "AutoInstall": true,
+    "BackupBeforeUpdate": true,
+    "MaxRetries": 3,
+    "VerifyChecksum": true,
+    "AllowDowngrade": false,
+    "StartupDelayMinutes": 2
+  },
+  "Logging": {
+    "LogLevel": "Information",
+    "LogPath": "C:\\ProgramData\\ContextSensor\\logs\\updater.log"
+  }
+}

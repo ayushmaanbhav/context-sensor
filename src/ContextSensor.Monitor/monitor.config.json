@@ -1,0 +1,17 @@
+{
+  "Monitoring": {
+    "ProcessName": "ContextSensor.App",
+    "ProcessPath": "C:\\Program Files\\ContextSensor\\ContextSensor.App.exe",
+    "CheckIntervalSeconds": 30,
+    "StartupDelaySeconds": 10,
+    "MaxRestartAttempts": 3,
+    "RestartDelaySeconds": 10,
+    "RestartBackoffMultiplier": 2.0,
+    "MaxRestartAttemptsPerHour": 10,
+    "EnableAutoStart": true
+  },
+  "Logging": {
+    "LogLevel": "Information",
+    "LogPath": "C:\\ProgramData\\ContextSensor\\logs\\monitor.log"
+  }
+}

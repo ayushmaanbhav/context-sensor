@@ -1,0 +1,35 @@
+{
+  "events": [
+    {
+      "name": "mouse_click_down",
+      "description": "Left mouse button click event",
+      "output_attributes": [
+        {
+          "name": "os_event_type",
+          "datatype": "string",
+          "description": "The OS-level event type identifier"
+        },
+        {
+          "name": "foreground_process_id",
+          "datatype": "integer",
+          "description": "Process ID of the foreground application"
+        },
+        {
+          "name": "foreground_process_name",
+          "datatype": "string",
+          "description": "Executable name of the foreground process"
+        },
+        {
+          "name": "mouse.x",
+          "datatype": "integer",
+          "description": "X coordinate of mouse cursor"
+        },
+        {
+          "name": "mouse.y",
+          "datatype": "integer",
+          "description": "Y coordinate of mouse cursor"
+        }
+      ]
+    }
+  ]
+}

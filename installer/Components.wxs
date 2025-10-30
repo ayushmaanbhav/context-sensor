@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
+  <Fragment>
+    <ComponentGroup Id="RegistryAndShortcuts">
+      <Component Id="RegistryEntries" Directory="INSTALLFOLDER" Guid="B2C3D4E5-F6A7-4B5C-8D7E-9F0A1B2C3D4E">
+        <RegistryKey Root="HKLM" Key="Software\ContextSensor">
+          <RegistryValue Type="string" Name="InstallPath" Value="[INSTALLFOLDER]" KeyPath="yes" />
+          <RegistryValue Type="string" Name="Version" Value="1.0.1" />
+          <RegistryValue Type="string" Name="DataPath" Value="[CommonAppDataFolder]ContextSensor" />
+          <RegistryValue Type="string" Name="UpdateUrl" Value="https://updates.example.com/contextsensor/manifest.json" />
+        </RegistryKey>
+      </Component>
+      
+      <Component Id="ApplicationShortcut" Directory="ApplicationProgramsFolder" Guid="C3D4E5F6-A7B8-4C5D-8E7F-9A0B1C2D3E4F">
+        <Shortcut Id="ApplicationStartMenuShortcut"
+                  Name="ContextSensor"
+                  Description="Context-aware event monitoring application"
+                  Target="[INSTALLFOLDER]ContextSensor.App.exe"
+                  WorkingDirectory="INSTALLFOLDER" />
+        <Shortcut Id="UninstallShortcut"
+                  Name="Uninstall ContextSensor"
+                  Description="Uninstalls ContextSensor"
+                  Target="[SystemFolder]msiexec.exe"
+                  Arguments="/x [ProductCode]" />
+        <RemoveFolder Id="CleanUpShortcut" Directory="ApplicationProgramsFolder" On="uninstall" />
+        <RegistryValue Root="HKCU" Key="Software\ContextSensor" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="ApplicationFiles" Directory="INSTALLFOLDER">
+      <Component Id="ContextSensor.App.exe" Guid="D4E5F6A7-B8C9-4D5E-8F7A-9B0C1D2E3F4A">
+        <File Id="ContextSensor.App.exe"
+              Source="$(var.SolutionDir)src\ContextSensor.App\bin\Release\net8.0-windows\win-$(var.Platform)\publish\ContextSensor.App.exe"
+              KeyPath="yes" />
+      </Component>
+
+      <Component Id="AppSettings" Guid="E5F6A7B8-C9D0-4E5F-8A7B-9C0D1E2F3A4B">
+        <File Id="appsettings.json"
+              Source="$(var.SolutionDir)src\ContextSensor.App\appsettings.json"
+              KeyPath="yes" />
+      </Component>
+
+      <Component Id="EventsConfig" Guid="F6A7B8C9-D0E1-4F5A-8B7C-9D0E1F2A3B4C">
+        <File Id="events.json"
+              Source="$(var.SolutionDir)src\ContextSensor.App\events.json"
+              KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="MonitorServiceFiles" Directory="INSTALLFOLDER">
+      <Component Id="ContextSensor.Monitor.exe" Guid="E1F2A3B4-C5D6-4E5F-8A7B-9C0D1E2F3A4B">
+        <File Id="ContextSensor.Monitor.exe"
+              Source="$(var.SolutionDir)src\ContextSensor.Monitor\bin\Release\net8.0-windows\win-$(var.Platform)\publish\ContextSensor.Monitor.exe"
+              KeyPath="yes" />
+        
+        <ServiceInstall Id="MonitorServiceInstall"
+                        Name="ContextSensor.Monitor"
+                        DisplayName="ContextSensor Monitor Service"
+                        Description="Monitors and maintains the ContextSensor application..."
+                        Type="ownProcess"
+                        Start="auto"
+                        ErrorControl="normal"
+                        Account="LocalSystem" />
+        
+        <ServiceControl Id="MonitorServiceControl"
+                        Name="ContextSensor.Monitor"
+                        Start="install"
+                        Stop="both"
+                        Remove="uninstall"
+                        Wait="yes" />
+        
+        <util:ServiceConfig ServiceName="ContextSensor.Monitor"
+                            FirstFailureActionType="restart"
+                            SecondFailureActionType="restart"
+                            ThirdFailureActionType="restart"
+                            RestartServiceDelayInSeconds="60"
+                            ResetPeriodInDays="1" />
+      </Component>
+      
+      <Component Id="MonitorConfig" Guid="F2A3B4C5-D6E7-4F5A-8B7C-9D0E1F2A3B4C">
+        <File Id="monitor.config.json"
+              Source="$(var.SolutionDir)src\ContextSensor.Monitor\monitor.config.json"
+              KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="UpdaterServiceFiles" Directory="INSTALLFOLDER">
+      <Component Id="ContextSensor.Updater.exe" Guid="A3B4C5D6-E7F8-4A5B-8C7D-9E0F1A2B3C4D">
+        <File Id="ContextSensor.Updater.exe"
+              Source="$(var.SolutionDir)src\ContextSensor.Updater\bin\Release\net8.0-windows\win-$(var.Platform)\publish\ContextSensor.Updater.exe"
+              KeyPath="yes" />
+        
+        <ServiceInstall Id="UpdaterServiceInstall"
+                        Name="ContextSensor.Updater"
+                        DisplayName="ContextSensor Update Service"
+                        Description="Automatically checks for and installs updates..."
+                        Type="ownProcess"
+                        Start="auto"
+                        ErrorControl="normal"
+                        Account="LocalSystem" />
+        
+        <ServiceControl Id="UpdaterServiceControl"
+                        Name="ContextSensor.Updater"
+                        Start="install"
+                        Stop="both"
+                        Remove="uninstall"
+                        Wait="yes" />
+        
+        <util:ServiceConfig ServiceName="ContextSensor.Updater"
+                            FirstFailureActionType="restart"
+                            SecondFailureActionType="restart"
+                            ThirdFailureActionType="restart"
+                            RestartServiceDelayInSeconds="60"
+                            ResetPeriodInDays="1" />
+      </Component>
+      
+      <Component Id="UpdaterConfig" Guid="B4C5D6E7-F8A9-4B5C-8D7E-9F0A1B2C3D4E">
+        <File Id="updater.config.json"
+              Source="$(var.SolutionDir)src\ContextSensor.Updater\updater.config.json"
+              KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="DataFolders">
+      <Component Id="DataFolder" Directory="DATAFOLDER" Guid="C5D6E7F8-A9B0-4C5D-8E7F-9A0B1C2D3E4F" Permanent="yes">
+        <CreateFolder>
+          <Permission User="Everyone" GenericAll="yes" />
+        </CreateFolder>
+        <RegistryValue Root="HKCU" Key="Software\ContextSensor\Folders" Name="DataFolder" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+      
+      <Component Id="LogsFolder" Directory="LOGSFOLDER" Guid="D6E7F8A9-B0C1-4D5E-8F7A-9B0C1D2E3F4A" Permanent="yes">
+        <CreateFolder>
+          <Permission User="Everyone" GenericAll="yes" />
+        </CreateFolder>
+        <RegistryValue Root="HKCU" Key="Software\ContextSensor\Folders" Name="LogsFolder" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+      
+      <Component Id="TempFolder" Directory="TEMPFOLDER" Guid="E7F8A9B0-C1D2-4E5F-8A7B-9C0D1E2F3A4B">
+        <CreateFolder>
+          <Permission User="Everyone" GenericAll="yes" />
+        </CreateFolder>
+        <RegistryValue Root="HKCU" Key="Software\ContextSensor\Folders" Name="TempFolder" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+      
+      <Component Id="UpdatesFolder" Directory="UPDATESFOLDER" Guid="F8A9B0C1-D2E3-4F5A-8B7C-9D0E1F2A3B4C">
+        <CreateFolder>
+          <Permission User="Everyone" GenericAll="yes" />
+        </CreateFolder>
+        <RegistryValue Root="HKCU" Key="Software\ContextSensor\Folders" Name="UpdatesFolder" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

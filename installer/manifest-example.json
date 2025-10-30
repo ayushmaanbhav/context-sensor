@@ -1,0 +1,9 @@
+{
+  "version": "1.0.1",
+  "releaseDate": "2025-11-01T00:00:00Z",
+  "downloadUrl": "https://updates.example.com/contextsensor/ContextSensor-1.0.1.msi",
+  "checksum": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "releaseNotes": "Bug fixes and performance improvements. This version includes:\n- Fixed issue with mouse tracking on high-DPI displays\n- Improved service startup reliability\n- Reduced memory usage\n- Enhanced logging capabilities",
+  "minimumVersion": "1.0.0",
+  "mandatoryUpdate": false
+}
